@@ -6,16 +6,22 @@ public class PlayerBehaviour : MonoBehaviour
 {
     public CharacterController controller;
 
+
+    [Header("Control Properties")]
     public float speed = 12f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
+    public Vector3 velocity;
 
+
+    [Header("Ground Detection Properties")]
     public Transform groundCheck;
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
+    public bool isGrounded;
 
-    Vector3 velocity;
-    bool isGrounded;
+    [Header("MiniMap")]
+    public GameObject miniMap;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +58,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-
+            miniMap.SetActive(!miniMap.activeInHierarchy);
         }
 
     }

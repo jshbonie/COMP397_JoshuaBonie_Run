@@ -11,6 +11,7 @@ public class EnemyBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("Player").transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
         
     }

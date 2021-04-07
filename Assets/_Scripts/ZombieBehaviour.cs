@@ -36,7 +36,10 @@ public class ZombieBehaviour : MonoBehaviour
 
 
         //HasLOS = Physics.BoxCast(transform.position + LOSoffset, transform.localScale, transform.forward, transform.rotation, 10.0f, collisionLayer);
-
+        if (HasLOS)
+        {
+            agent.SetDestination(player.transform.position);
+        }
 
 
         if (HasLOS && Vector3.Distance(transform.position, player.transform.position) < 2.5)
@@ -50,10 +53,14 @@ public class ZombieBehaviour : MonoBehaviour
                 animator.SetInteger("AnimState", (int)CryptoState.JUMP);
             }
 
+        }else if(HasLOS)
+        {
+            animator.SetInteger("AnimState", (int)CryptoState.WALK);
+
         }
         else
         {
-            animator.SetInteger("AnimState", (int)CryptoState.WALK);
+            animator.SetInteger("AnimState", (int)CryptoState.IDLE);
 
         }
 

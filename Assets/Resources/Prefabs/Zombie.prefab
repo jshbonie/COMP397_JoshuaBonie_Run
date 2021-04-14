@@ -1931,7 +1931,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.25
-  m_Speed: 2
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1970,6 +1970,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HasLOS: 0
   player: {fileID: 0}
+  attackDistance: 2
+  playerBehaviour: {fileID: 0}
+  damageDelay: 45
+  IsAttacking: 0
+  kickForce: 500
+  distanceToPlayer: 0
 --- !u!1 &8247422628834967347
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,8 @@ public enum CryptoState
 {
     IDLE,
     WALK,
-    JUMP
+    JUMP,
+    PUNCH
 }
 
 public class ZombieBehaviour : MonoBehaviour
@@ -21,42 +22,57 @@ public class ZombieBehaviour : MonoBehaviour
     private NavMeshAgent agent;
     private Animator animator;
 
+    [Header("Attack")]
+    public float attackDistance;
+    public PlayerBehaviour playerBehaviour;
+    public float damageDelay = 1.0f;
+    public bool IsAttacking = false;
+    public float kickForce = 10f;
+    public float distanceToPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        
+        playerBehaviour = FindObjectOfType<PlayerBehaviour>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-
 
 
         //HasLOS = Physics.BoxCast(transform.position + LOSoffset, transform.localScale, transform.forward, transform.rotation, 10.0f, collisionLayer);
         if (HasLOS)
         {
             agent.SetDestination(player.transform.position);
+            distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
         }
 
 
-        if (HasLOS && Vector3.Distance(transform.position, player.transform.position) < 2.5)
+        if (HasLOS && distanceToPlayer < attackDistance && !IsAttacking)
         {
-            //could be an attack
-            animator.SetInteger("AnimState", (int)CryptoState.IDLE);
+            
+            animator.SetInteger("AnimState", (int)CryptoState.PUNCH);
             transform.LookAt(transform.position - player.transform.forward);
+
+         
+            DoPunchDamage();
+            IsAttacking = true;
+
 
             if (agent.isOnOffMeshLink)
             {
                 animator.SetInteger("AnimState", (int)CryptoState.JUMP);
             }
 
-        }else if(HasLOS)
+        }
+        else if(HasLOS && distanceToPlayer > attackDistance)
         {
             animator.SetInteger("AnimState", (int)CryptoState.WALK);
-
+            IsAttacking = false;
         }
         else
         {
@@ -95,6 +111,20 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    private void DoPunchDamage()
+    {
+        playerBehaviour.TakeDamage(20);
+        StartCoroutine(kickBack());
+
+    }
+
+    private IEnumerator kickBack()
+    {
+        yield return new WaitForSeconds(1.0f);
+        var direction = Vector3.Normalize(player.transform.position - transform.position);
+        playerBehaviour.controller.SimpleMove(direction * kickForce);
+        StopCoroutine(kickBack());
+    }
 
 
 }

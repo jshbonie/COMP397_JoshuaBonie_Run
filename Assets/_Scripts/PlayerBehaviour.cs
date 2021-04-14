@@ -23,7 +23,17 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("MiniMap")]
     public GameObject miniMap;
 
-    // Start is called before the first frame update
+    [Header("Player Sounds")]
+    public AudioSource jumpSound;
+    public AudioSource hitSound;
+
+    [Header("HealthBar")]
+    public HealthBarScreenSpaceController healthBar;
+
+    [Header("Player Abilities")]
+    [Range(0, 100)]
+    public int health = 100;
+
     void Start()
     {
         
@@ -49,6 +59,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+            jumpSound.Play();
         }
 
 
@@ -63,12 +74,15 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    public void TakeDamage(int damage)
     {
+        health -= damage;
+        hitSound.Play();
+        healthBar.TakeDamage(damage);
 
-
-
-
+        if (health < 0)
+        {
+            health = 0;
+        }
     }
 }
